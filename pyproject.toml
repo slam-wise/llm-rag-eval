@@ -19,14 +19,11 @@ classifiers = [
     "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.14",
     "Topic :: Scientific/Engineering :: Artificial Intelligence",
 ]
 dependencies = [
-    "google-generativeai>=0.8.0",
+    "google-genai>=0.8.0",
     "python-dotenv>=1.0.0",
     "pydantic>=2.0.0",
     "rich>=13.7.0",
@@ -46,10 +43,15 @@ include = ["rag_eval*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v --tb=short"
+filterwarnings = [
+    # DeprecationWarning from google.genai internals on Python 3.14 — not our code.
+    # Remove once google-genai ships a fix.
+    "ignore::DeprecationWarning:google.genai",
+]
 
 [tool.ruff]
 line-length = 100
-target-version = "py310"
+target-version = "py314"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP"]
