@@ -76,8 +76,8 @@ ollama pull qwen2.5:7b
 **3. Install the package**
 
 ```bash
-git clone https://github.com/Slam-wise/LLM-RAG-Eval
-cd LLM-RAG-Eval
+git clone https://github.com/Slam-wise/llm-rag-eval
+cd llm-rag-eval
 pip install -e ".[dev]"
 ```
 
