@@ -76,7 +76,7 @@ ollama pull qwen2.5:7b
 **3. Install the package**
 
 ```bash
-git clone https://github.com/Slam-wise/llm-rag-eval
+git clone https://github.com/slam-wise/llm-rag-eval
 cd llm-rag-eval
 pip install -e ".[dev]"
 ```
@@ -302,7 +302,9 @@ The judge model returned malformed JSON. The parser handles the most common case
 
 ## Author
 
-[Slam-wise](https://github.com/Slam-wise)
+slamwise
+
+[slam-wise](https://github.com/slam-wise)
 
 ---
 
