@@ -26,15 +26,15 @@ from rag_eval.providers.base import BaseLLMProvider, ProviderError
 from rag_eval.types import LLMResponse, TokenUsage
 
 # Default model — free tier, fast, sufficient for LLM-as-judge tasks.
-# Swap to "gemini-1.5-pro" for higher quality at the cost of lower rate limits.
-_DEFAULT_MODEL = "gemini-2.0-flash"
+# Swap to "gemini-3.5-pro" for higher quality at the cost of lower rate limits.
+_DEFAULT_MODEL = "gemini-2.5-flash"
 
 # Conservative generation config for evaluation:
 # - temperature=0.0  → deterministic, reproducible scores
-# - max_output_tokens → enough for score + reasoning + flagged claims
+# - max_output_tokens → judge needs room for detailed multi-step reasoning
 _GENERATION_CONFIG = types.GenerateContentConfig(
     temperature=0.0,
-    max_output_tokens=1024,
+    max_output_tokens=8192,
 )
 
 
@@ -121,7 +121,7 @@ class GeminiProvider(BaseLLMProvider):
 
         usage = TokenUsage(
             input_tokens=response.usage_metadata.prompt_token_count or 0,
-            output_tokens=response.usage_metadata.response_token_count or 0,
+            output_tokens=(response.usage_metadata.candidates_token_count or 0) + (response.usage_metadata.thoughts_token_count or 0),
         )
 
         return LLMResponse(

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "ideal_01",
+    "query": "When was the Eiffel Tower built and what was its original purpose?",
+    "context": [
+      "The Eiffel Tower is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It was constructed between 1887 and 1889 as the centerpiece of the 1889 World's Fair, which celebrated the centennial of the French Revolution. Designed by engineer Gustave Eiffel, it stood as the world's tallest man-made structure for 41 years until the Chrysler Building was completed in 1930."
+    ],
+    "response": "The Eiffel Tower was built between 1887 and 1889. Its original purpose was to serve as the centerpiece of the 1889 World's Fair, an exposition celebrating the centennial of the French Revolution."
+  },
+
+  {
+    "id": "hallucination_number_01",
+    "query": "How tall is the Eiffel Tower?",
+    "context": [
+      "The Eiffel Tower stands 330 metres (1,083 feet) tall, including its broadcast antenna. Without the antenna, the tower itself measures 300 metres. It was the world's tallest structure from 1889 until 1930."
+    ],
+    "response": "The Eiffel Tower is 450 metres tall, making it one of the most recognisable structures in the world. It held the title of the world's tallest structure for several decades after its construction."
+  },
+
+  {
+    "id": "context_irrelevant_01",
+    "query": "What are the health benefits of drinking green tea?",
+    "context": [
+      "Coffee is one of the world's most popular beverages, consumed by over 2 billion people daily. It contains caffeine, a stimulant that improves mental alertness and physical performance. The coffee plant, Coffea arabica, originated in Ethiopia and was first cultivated in the Arabian Peninsula in the 15th century."
+    ],
+    "response": "Green tea contains powerful antioxidants called catechins, particularly EGCG, which have been linked to improved brain function, fat burning, and reduced risk of certain cancers. It also contains L-theanine, which promotes calm alertness."
+  },
+
+  {
+    "id": "fluent_non_answer_01",
+    "query": "How do I reset my password on the Acme Corp customer portal?",
+    "context": [
+      "The Acme Corp customer portal provides clients with self-service access to invoices, support tickets, subscription management, and account settings. Customers can update billing information, download usage reports, and track open service requests through the portal dashboard."
+    ],
+    "response": "The Acme Corp customer portal is a comprehensive self-service platform that gives you full visibility into your account. It includes access to invoices, support tickets, and subscription management — everything you need to manage your relationship with Acme Corp."
+  },
+
+  {
+    "id": "contradiction_fact_01",
+    "query": "Who co-founded Apple and in what year?",
+    "context": [
+      "Apple Inc. was co-founded by Steve Jobs, Steve Wozniak, and Ronald Wayne on April 1, 1976, in Cupertino, California. Wozniak designed the original Apple I computer, while Jobs handled the business and marketing side. Ronald Wayne provided administrative oversight but sold his 10% share back to Jobs and Wozniak just 12 days after the company's founding."
+    ],
+    "response": "Apple was co-founded by Steve Jobs and Steve Wozniak in 1984. Jobs served as the visionary leader while Wozniak was the technical genius behind the company's early hardware."
+  },
+
+  {
+    "id": "unfaithful_adds_knowledge_01",
+    "query": "What is photosynthesis?",
+    "context": [
+      "Photosynthesis is the process by which plants, algae, and some bacteria convert light energy into chemical energy stored as glucose. The process uses carbon dioxide from the air and water from the soil, releasing oxygen as a byproduct."
+    ],
+    "response": "Photosynthesis is the process by which plants, algae, and some bacteria convert light energy into chemical energy stored as glucose, using carbon dioxide and water while releasing oxygen. This process takes place in the chloroplasts, specifically in structures called thylakoids where light-dependent reactions occur, and in the stroma where the Calvin cycle produces glucose."
+  },
+
+  {
+    "id": "partial_answer_01",
+    "query": "What are the main symptoms of Type 2 diabetes and how is it typically treated?",
+    "context": [
+      "Type 2 diabetes is a chronic condition in which the body does not use insulin effectively. Common symptoms include increased thirst, frequent urination, unexplained fatigue, blurred vision, and slow-healing wounds. Treatment typically involves lifestyle modifications such as diet changes and exercise, blood sugar monitoring, oral medications like metformin, and in some cases insulin therapy."
+    ],
+    "response": "The main symptoms of Type 2 diabetes include increased thirst, frequent urination, unexplained fatigue, blurred vision, and slow-healing wounds."
+  },
+
+  {
+    "id": "multi_chunk_synthesis_01",
+    "query": "What is Canberra's status in Australia and what is its population?",
+    "context": [
+      "Canberra is the capital city of Australia and the seat of the federal government. It is located in the Australian Capital Territory (ACT), a self-governing territory distinct from the surrounding state of New South Wales. Canberra was purpose-built as the nation's capital following a compromise between the rival cities of Sydney and Melbourne.",
+      "According to the 2021 Australian Census, Canberra had a population of approximately 454,499 residents. It is Australia's largest inland city and the eighth-largest city overall by population. The city is known for its high average income levels and large proportion of government and public sector workers."
+    ],
+    "response": "Canberra is the capital city of Australia and the seat of the federal government, located in the Australian Capital Territory. According to the 2021 Census, it has a population of approximately 454,499 residents, making it Australia's largest inland city."
+  }
+]

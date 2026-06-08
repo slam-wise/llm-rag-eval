@@ -48,12 +48,14 @@ def make_mock_gemini_response(
     text: str = "Paris",
     prompt_tokens: int = 100,
     response_tokens: int = 20,
+    thoughts_tokens: int = 0,
 ) -> MagicMock:
     """Build a mock that mirrors the google-genai response shape."""
     response = MagicMock()
     response.text = text
     response.usage_metadata.prompt_token_count = prompt_tokens
-    response.usage_metadata.response_token_count = response_tokens
+    response.usage_metadata.candidates_token_count = response_tokens
+    response.usage_metadata.thoughts_token_count = thoughts_tokens
     return response
 
 
@@ -123,7 +125,7 @@ class TestGeminiProviderInit:
     def test_happy_path(self, mock_client_cls):
         provider = GeminiProvider(env_path=None)
         mock_client_cls.assert_called_once_with(api_key="test-key-abc123")
-        assert provider.model_name == "gemini-2.0-flash"
+        assert provider.model_name == "gemini-2.5-flash"
 
     @patch("rag_eval.providers.gemini.genai.Client")
     @patch.dict("os.environ", {"GEMINI_API_KEY": "test-key-abc123"})
@@ -142,7 +144,7 @@ class TestGeminiProviderInit:
     def test_repr(self, mock_client_cls):
         provider = GeminiProvider(env_path=None)
         assert "GeminiProvider" in repr(provider)
-        assert "gemini-2.0-flash" in repr(provider)
+        assert "gemini-2.5-flash" in repr(provider)
 
     @patch("rag_eval.providers.gemini.genai.Client")
     @patch.dict("os.environ", {"GEMINI_API_KEY": "test-key-abc123"})
@@ -185,14 +187,17 @@ class TestGeminiProviderComplete:
         assert result.text == "The capital is Paris."
 
     def test_token_usage_extracted(self, provider):
+        # thoughts_tokens are hidden reasoning tokens — summed into output_tokens
+        # so usage reflects true API consumption.
         provider._client.models.generate_content.return_value = make_mock_gemini_response(
             prompt_tokens=120,
             response_tokens=30,
+            thoughts_tokens=50,
         )
         result = provider.complete("prompt")
         assert result.usage.input_tokens == 120
-        assert result.usage.output_tokens == 30
-        assert result.usage.total_tokens == 150
+        assert result.usage.output_tokens == 80   # 30 candidates + 50 thoughts
+        assert result.usage.total_tokens == 200
 
     def test_latency_is_positive(self, provider):
         provider._client.models.generate_content.return_value = make_mock_gemini_response()
@@ -203,7 +208,8 @@ class TestGeminiProviderComplete:
         """Defensive: usage_metadata fields can be None on some error responses."""
         response = make_mock_gemini_response()
         response.usage_metadata.prompt_token_count = None
-        response.usage_metadata.response_token_count = None
+        response.usage_metadata.candidates_token_count = None
+        response.usage_metadata.thoughts_token_count = None
         provider._client.models.generate_content.return_value = response
 
         result = provider.complete("prompt")
