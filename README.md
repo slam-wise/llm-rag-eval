@@ -1,4 +1,4 @@
-# RAG Eval
+# LLM RAG Eval
 
 **LLM evaluation framework for RAG pipelines, focused on faithfulness and hallucination detection.**
 
