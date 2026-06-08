@@ -161,6 +161,24 @@ class TestParseResponse:
         result = evaluator._parse_response(make_llm_response(padded))
         assert result.score == pytest.approx(0.5)
 
+
+    def test_sanitises_smart_quotes(self, evaluator):
+        """Unicode curly quotes should become ASCII single quotes."""
+        json_with_curly = '{"score": 0.8, "reasoning": "“Good” response", "flagged_claims": []}'
+        result = evaluator._parse_response(make_llm_response(json_with_curly))
+        assert result.score == pytest.approx(0.8)
+
+    def test_sanitises_double_quoted_array_items(self, evaluator):
+        """[""text""] is a common local model quirk and should parse cleanly."""
+        broken_json = '{"score": 0.4, "reasoning": "ok", "flagged_claims": [""claim one""]}'
+        result = evaluator._parse_response(make_llm_response(broken_json))
+        assert result.flagged_claims == ["claim one"]
+
+    def test_sanitises_multiple_double_quoted_items(self, evaluator):
+        broken_json = '{"score": 0.3, "reasoning": "ok", "flagged_claims": [""claim one"", ""claim two""]}'
+        result = evaluator._parse_response(make_llm_response(broken_json))
+        assert result.flagged_claims == ["claim one", "claim two"]
+
     def test_invalid_json_raises_evaluator_error(self, evaluator):
         with pytest.raises(EvaluatorError, match="Failed to parse"):
             evaluator._parse_response(make_llm_response("this is not json at all"))

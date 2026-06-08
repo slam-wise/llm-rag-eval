@@ -56,8 +56,11 @@ Required schema:
     "flagged_claims": ["<item 1>", "<item 2>"]
 }}
 
-The "flagged_claims" list should contain verbatim quotes or short descriptions \
-of specific problematic items. Use an empty list [] if there are none."""
+Rules for "flagged_claims":
+- Write each item as a plain string. Do NOT wrap items in extra quotation marks.
+- Correct:   ["The response states X, which contradicts the context."]
+- Incorrect: [\"The response states X, which contradicts the context.\"]
+- Use an empty list [] if there are no flagged claims."""
 
 
 # ---------------------------------------------------------------------------
@@ -132,7 +135,7 @@ class BaseEvaluator(ABC):
         # Strip markdown code fences — ```json ... ``` or ``` ... ```
         text = re.sub(r"^```(?:json)?\s*\n?", "", text)
         text = re.sub(r"\n?```$", "", text)
-        text = text.strip()
+        text = self._sanitise_json(text.strip())
 
         try:
             judge_output = _JudgeOutput.model_validate_json(text)
@@ -150,6 +153,28 @@ class BaseEvaluator(ABC):
             usage=response.usage,
             latency_ms=response.latency_ms,
         )
+
+    @staticmethod
+    def _sanitise_json(text: str) -> str:
+        """Fix common JSON formatting issues produced by local LLMs.
+
+        Handles two patterns seen with smaller local models:
+        1. Unicode smart/curly quotes — replaced with ASCII single quotes so
+           they do not conflict with JSON string delimiters.
+        2. Redundant double-quotes around array items: [""text""] -> ["text"].
+           Local models sometimes add an extra layer of quoting inside arrays.
+        """
+        # Replace Unicode curly/smart quotes with ASCII single quotes.
+        text = text.replace("“", "'").replace("”", "'")
+        text = text.replace("‘", "'").replace("’", "'")
+
+        # Fix [""text""] -> ["text"]:
+        # Step 1: remove the spurious opening quote right after [ or ,
+        text = re.sub(r'(?<=[\[,])\s*""\s*', '"', text)
+        # Step 2: remove the spurious closing quote right before ] or ,
+        text = re.sub(r'\s*""\s*(?=[\],])', '"', text)
+
+        return text
 
     @staticmethod
     def _format_context(chunks: list[str]) -> str:
